@@ -13,6 +13,8 @@ const db = mysql.createConnection({
   database: "test",
 });
 
+app.use(express.json());
+
 db.connect((err) => {
   if (err) {
     console.log(err);
@@ -33,6 +35,17 @@ app.get("/books", (req, res) => {
     } else {
       res.json(result);
     }
+  });
+});
+
+app.post("/books", (req, res) => {
+  const q = "INSERT INTO books(`title`, `description`, `cover`) VALUES (?)";
+  const values = [req.body.title, req.body.description, req.body.cover];
+  db.query(q, [values], (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    return res.json("book has been created successfully");
   });
 });
 
